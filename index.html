@@ -1,494 +1,155 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
- <meta charset="UTF-8" />
- <title>Управление устройством</title>
- <style>
-  body {
-   margin: 0;
-   background: linear-gradient(135deg, #232526, #414345);
-   overflow: hidden;
-   font-family: 'Segoe UI', sans-serif;
-   color: #fff;
-   height: 100vh;
-   user-select: none;
-   touch-action: none;
-  }
-
-  .floating-shape {
-   position: absolute;
-   opacity: 0.6;
-   animation: float 8s infinite linear alternate;
-   pointer-events: none;
-   z-index: 0;
-   filter: drop-shadow(0 0 6px rgba(255 255 255 / 0.15));
-   transition: transform 0.3s ease;
-   will-change: transform;
-  }
-
-  @keyframes float {
-   0% {
-    transform: translateY(0) scale(1);
-   }
-
-   100% {
-    transform: translateY(-40px) scale(1.1);
-   }
-  }
-
-  .circle {
-   border-radius: 50%;
-  }
-
-  .square {
-   border-radius: 12px;
-  }
-
-  .triangle {
-   width: 0;
-   height: 0;
-   border-left: 40px solid transparent;
-   border-right: 40px solid transparent;
-   border-bottom: 70px solid;
-   background: transparent;
-   opacity: 0.6;
-   animation: float 8s infinite linear alternate;
-   pointer-events: none;
-   position: absolute;
-   filter: drop-shadow(0 0 6px rgba(255 255 255 / 0.15));
-   z-index: 0;
-   transition: transform 0.3s ease;
-   will-change: transform;
-  }
-
-  /* Фигуры с позициями и цветами */
-  .shape1 {
-   width: 120px;
-   height: 120px;
-   background: #ff6f61;
-   left: 10vw;
-   top: 20vh;
-   animation-delay: 0s;
-  }
-
-  .shape2 {
-   width: 80px;
-   height: 80px;
-   background: #6ec6ff;
-   left: 60vw;
-   top: 10vh;
-   animation-delay: 2s;
-  }
-
-  .shape3 {
-   width: 100px;
-   height: 100px;
-   background: #ffd54f;
-   left: 40vw;
-   top: 60vh;
-   animation-delay: 4s;
-  }
-
-  .shape4 {
-   width: 90px;
-   height: 90px;
-   background: #9c27b0;
-   left: 30vw;
-   top: 40vh;
-   animation-delay: 1s;
-  }
-
-  .shape5 {
-   width: 70px;
-   height: 70px;
-   background: #00bcd4;
-   left: 70vw;
-   top: 50vh;
-   animation-delay: 3s;
-  }
-
-  .shape6 {
-   width: 110px;
-   height: 110px;
-   background: #ff9800;
-   left: 50vw;
-   top: 30vh;
-   animation-delay: 5s;
-  }
-
-  .shape7 {
-   width: 60px;
-   height: 60px;
-   background: #4caf50;
-   left: 80vw;
-   top: 70vh;
-   animation-delay: 6s;
-  }
-
-  .shape8 {
-   width: 50px;
-   height: 50px;
-   background: #e91e63;
-   left: 20vw;
-   top: 75vh;
-   animation-delay: 2.5s;
-  }
-
-  .shape9 {
-   width: 95px;
-   height: 95px;
-   background: #00e676;
-   left: 85vw;
-   top: 25vh;
-   animation-delay: 1.5s;
-  }
-
-  .shape10 {
-   width: 65px;
-   height: 65px;
-   background: #ffd700;
-   left: 5vw;
-   top: 60vh;
-   animation-delay: 5.5s;
-  }
-
-  .triangle1 {
-   left: 15vw;
-   top: 55vh;
-   border-bottom-color: #ff4081;
-   animation-delay: 1.2s;
-  }
-
-  .triangle2 {
-   left: 75vw;
-   top: 15vh;
-   border-bottom-color: #3f51b5;
-   animation-delay: 3.7s;
-  }
-
-  .triangle3 {
-   left: 45vw;
-   top: 75vh;
-   border-bottom-color: #00bfa5;
-   animation-delay: 5.1s;
-  }
-
-  .container {
-   position: relative;
-   z-index: 2;
-   display: flex;
-   flex-direction: column;
-   align-items: center;
-   justify-content: center;
-   height: 100vh;
-   text-align: center;
-   padding: 0 20px;
-   user-select: text;
-  }
-
-  h1 {
-   font-size: 2.5em;
-   margin-bottom: 0.5em;
-   text-shadow: 0 4px 24px #000a;
-  }
-
-  p {
-   font-size: 1.3em;
-   margin-bottom: 1em;
-   text-shadow: 0 2px 8px #0008;
-  }
-
-  .bluetooth-btn {
-   margin-top: 40px;
-   padding: 18px 36px;
-   background: #2196f3;
-   border: none;
-   border-radius: 32px;
-   color: #fff;
-   font-size: 1.3em;
-   cursor: pointer;
-   box-shadow: 0 6px 24px rgba(33, 150, 243, 0.25);
-   transition: background 0.3s;
-  }
-
-  .bluetooth-btn:hover {
-   background: #1769aa;
-  }
-
-  #status {
-   margin-top: 20px;
-   font-size: 1.1em;
-   min-height: 30px;
-  }
-
-  #dataOutput {
-   display: none;
-  }
-
-  /* Круг с данными */
-  .data-circle {
-   width: 200px;
-   height: 200px;
-   border-radius: 50%;
-   background: rgba(255, 255, 255, 0.1);
-   border: 2px dashed rgba(33, 150, 243, 0.5);
-   display: flex;
-   flex-direction: column;
-   align-items: center;
-   justify-content: center;
-   font-weight: bold;
-   color: #000;
-   /* Черный цвет значения */
-   text-shadow: 0 2px 8px #0008;
-   box-shadow: 0 0 15px #2196f3;
-   margin-top: 10px;
-   /* Изменено значение отступа */
-   transition: background-color 0.3s ease;
-   position: relative;
-   /* Для позиционирования процентов */
-  }
-
-  #dataLabel {
-   font-size: 1.2em;
-   color: #fff;
-   text-shadow: 0 1px 4px #0008;
-   margin-bottom: 10px;
-   /* Чтобы было небольшое пространство между текстом и кругом */
-   margin-top: 10px;
-   /* Чтобы было небольшое пространство между текстом и верхним объектом */
-   text-align: center;
-   /* Центрируем текст по горизонтали */
-  }
-
-  #sensorValue {
-   font-size: 2em;
-   margin-right: 5px;
-   /* Размер значения */
-  }
-
-  .data-circle span {
-   position: static;
-   /* Абсолютное позиционирование */
-   transform: none;
-   /* Убираем трансформацию */
-   font-size: 1em;
-   /* Размер процентов */
-   font-weight: normal;
-   color: #000;
-   /* Черный цвет процентов */
-   text-shadow: none;
-  }
-
-  #stressLevel {
-   font-size: 1.1em;
-   margin-top: 10px;
-   color: #fff;
-   text-shadow: 0 1px 4px #0008;
-  }
- </style>
-</head>
-
-<body>
- <!-- Фигуры -->
- <div class="floating-shape circle shape1"></div>
- <div class="floating-shape circle shape2"></div>
- <div class="floating-shape circle shape3"></div>
- <div class="floating-shape circle shape4"></div>
- <div class="floating-shape circle shape5"></div>
- <div class="floating-shape square shape6"></div>
- <div class="floating-shape square shape7"></div>
- <div class="floating-shape square shape8"></div>
- <div class="floating-shape square shape9"></div>
- <div class="floating-shape square shape10"></div>
- <div class="triangle triangle1"></div>
- <div class="triangle triangle2"></div>
- <div class="triangle triangle3"></div>
-
- <div class="container">
-  <h1>Управление устройством</h1>
-  <p id="connectMessage">Подключите ваше устройство для начала управления.</p>
-  <button id="connectBtn" class="bluetooth-btn">Подключить устройство по Bluetooth</button>
-  <div id="status"></div>
-  <div id="dataLabel" style="display: none">Значение эмоционального состояния</div>
-  <div id="dataOutput" class="data-circle">
-   <div style="display: flex; align-items: center; justify-content: center;">
-    <span id="sensorValue">--</span>
-    <span>%</span>
-   </div>
-  </div>
-  <div id="stressLevel"></div>
- </div>
-
- <script>
-  (() => {
-   const shapes = [...document.querySelectorAll('.floating-shape, .triangle')];
-   const maxOffset = 30;
-   const influenceRadius = 150;
-
-   const shapeData = shapes.map(shape => {
-    const rect = shape.getBoundingClientRect();
-    return {
-     el: shape,
-     baseX: rect.left + rect.width / 2,
-     baseY: rect.top + rect.height / 2,
-     width: rect.width,
-     height: rect.height,
-     currentX: 0,
-     currentY: 0,
-    };
-   });
-
-   function onPointerMove(clientX, clientY) {
-    shapeData.forEach(data => {
-     const dx = clientX - data.baseX;
-     const dy = clientY - data.baseY;
-     const dist = Math.sqrt(dx * dx + dy * dy);
-     if (dist < influenceRadius) {
-      const force = (influenceRadius - dist) / influenceRadius;
-      const nx = dx / dist;
-      const ny = dy / dist;
-      const offsetX = nx * force * maxOffset;
-      const offsetY = ny * force * maxOffset;
-      data.currentX = offsetX;
-      data.currentY = offsetY;
-     } else {
-      data.currentX *= 0.9;
-      data.currentY *= 0.9;
-      if (Math.abs(data.currentX) < 0.1) data.currentX = 0;
-      if (Math.abs(data.currentY) < 0.1) data.currentY = 0;
-     }
-     data.el.style.transform = `translateX(${data.currentX}px) translateY(calc(${data.currentY}px - 40px)) scale(1.1)`;
-    });
-   }
-
-   window.addEventListener('mousemove', e => {
-    onPointerMove(e.clientX, e.clientY);
-   });
-   window.addEventListener('touchmove', e => {
-    if (e.touches.length > 0) {
-     const touch = e.touches[0];
-     onPointerMove(touch.clientX, touch.clientY);
-    }
-   });
-   window.addEventListener('mouseleave', () => {
-    shapeData.forEach(data => {
-     data.currentX = 0;
-     data.currentY = 0;
-     data.el.style.transform = `translateX(0) translateY(-40px) scale(1.1)`;
-    });
-   });
-   window.addEventListener('touchend', () => {
-    shapeData.forEach(data => {
-     data.currentX = 0;
-     data.currentY = 0;
-     data.el.style.transform = `translateX(0) translateY(-40px) scale(1.1)`;
-    });
-   });
-
-   const connectBtn = document.getElementById('connectBtn');
-   const statusEl = document.getElementById('status');
-   const dataOutput = document.getElementById('dataOutput');
-   const sensorValueEl = document.getElementById('sensorValue');
-   const connectMessage = document.getElementById('connectMessage');
-   const dataLabel = document.getElementById('dataLabel');
-   const stressLevelEl = document.getElementById('stressLevel');
-
-   // Функция для определения цвета в зависимости от значения
-   function getColorForPercentage(percentage) {
-    if (percentage < 0 || percentage > 100) return '#888'; // Серый для некорректных значений
-
-    let r, g, b = 0;
-    if (percentage < 50) {
-     // Зеленый -> Желтый
-     r = Math.floor(255 * (percentage / 50));
-     g = 255;
-    } else {
-     // Желтый -> Красный
-     r = 255;
-     g = Math.floor(255 * ((100 - percentage) / 50));
-    }
-
-    return `rgb(${r}, ${g}, ${b})`;
-   }
-
-   connectBtn.addEventListener('click', async () => {
-    try {
-     const device = await navigator.bluetooth.requestDevice({
-      acceptAllDevices: true,
-      optionalServices: ['0000ffe0-0000-1000-8000-00805f9b34fb'] // Сервис UART (пример для HC-06)
-     });
-     statusEl.textContent = `Устройство ${device.name || 'неизвестно'} выбрано! Подключение...`;
-     connectBtn.style.display = 'none';
-     connectMessage.style.display = 'none'; // Скрываем сообщение
-     dataLabel.style.display = 'block';
-     dataOutput.style.display = 'flex';
-     sensorValueEl.textContent = '--';
-     dataOutput.style.backgroundColor = '#444'; // Изначальный цвет
-
-     const server = await device.gatt.connect();
-     const service = await server.getPrimaryService('0000ffe0-0000-1000-8000-00805f9b34fb'); // UART service
-     const characteristic = await service.getCharacteristic('0000ffe1-0000-1000-8000-00805f9b34fb'); // UART characteristic
-
-     // Начинаем слушать изменения characteristic
-     characteristic.startNotifications();
-     characteristic.addEventListener('characteristicvaluechanged',
-      (event) => {
-       const value = event.target.value;
-       let strValue = "";
-       for (let i = 0; i < value.byteLength; i++) {
-        strValue += String.fromCharCode(value.getUint8(i));
-       }
-
-       // Преобразуем полученное значение в число (если возможно)
-       const sensorValue = parseInt(strValue);
-       if (!isNaN(sensorValue)) {
-        sensorValueEl.textContent = sensorValue;
-
-        // Обновляем цвет круга
-        const color = getColorForPercentage(sensorValue);
-        dataOutput.style.backgroundColor = color;
-
-        // Определяем уровень напряжения
-        let stressLevel = '';
-        if (sensorValue > 90) {
-         stressLevel = 'Вы сильно напряжены';
-        } else if (sensorValue > 75) {
-         stressLevel = 'Вы напряжены';
-        } else if (sensorValue > 50) {
-         stressLevel = 'Вы взволнованы';
-        } else if (sensorValue > 30) {
-         stressLevel = 'Вы спокойны';
-        } else {
-         stressLevel = 'Вы расслаблены';
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bluetooth Robot Control</title>
+    <style>
+        body { 
+            margin: 0; padding: 20px; font-family: 'Segoe UI', sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; min-height: 100vh; display: flex; flex-direction: column; align-items: center;
         }
-        stressLevelEl.textContent = stressLevel;
+        h1 { margin: 10px 0; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        button { 
+            background: rgba(255,255,255,0.2); border: none; border-radius: 15px; 
+            padding: 15px 25px; color: white; font-size: 16px; margin: 10px; 
+            cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        button:hover { background: rgba(255,255,255,0.4); transform: translateY(-2px); }
+        button:active { transform: translateY(0); }
+        #joystick { width: 200px; height: 200px; margin: 20px auto; background: rgba(255,255,255,0.1); border-radius: 50%; position: relative; }
+        #knob { width: 60px; height: 60px; background: white; border-radius: 50%; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); transition: 0.1s; }
+        .servo-group { display: flex; flex-wrap: wrap; justify-content: center; margin: 20px 0; }
+        .servo-group button { margin: 5px; padding: 12px 20px; font-size: 14px; }
+        #status { margin: 10px; padding: 10px; border-radius: 10px; background: rgba(0,0,0,0.3); }
+    </style>
+</head>
+<body>
+    <h1>🤖 Управление роботом по Bluetooth</h1>
+    <button id="connect">🔌 Подключить BLE</button>
+    <div id="status">Готов к подключению</div>
+    
+    <div id="joystick">
+        <div id="knob"></div>
+    </div>
+    
+    <div>
+        <button id="forward">⬆️ Вперед</button>
+        <button id="backward">⬇️ Назад</button>
+        <button id="left">⬅️ Влево</button>
+        <button id="right">➡️ Вправо</button>
+        <button id="stop">⏹️ Стоп</button>
+    </div>
+    
+    <div class="servo-group">
+        <h3>Серво 1</h3>
+        <button id="servo1-left">↖️ Лев</button>
+        <button id="servo1-right">↘️ Прав</button>
+        
+        <h3>Серво 2</h3>
+        <button id="servo2-left">↖️ Лев</button>
+        <button id="servo2-right">↘️ Прав</button>
+        
+        <h3>Серво 3</h3>
+        <button id="servo3-left">↖️ Лев</button>
+        <button id="servo3-right">↘️ Прав</button>
+        
+        <h3>Серво 4</h3>
+        <button id="servo4-left">↖️ Лев</button>
+        <button id="servo4-right">↘️ Прав</button>
+    </div>
 
-       } else {
-        sensorValueEl.textContent = 'Err';
-        dataOutput.style.backgroundColor = '#888'; // Серый для ошибки
-        stressLevelEl.textContent = ''; // Убираем текст об уровне напряжения
-       }
-      });
+    <script>
+        let device, server, driveChar, servoChars = [];
+        const SERVICE_UUID = '6e400001-b5a3-f393-e0a9-e50e24dcca9e'; // Стандартный Nordic UART или ваш
+        const DRIVE_UUID = '6e400002-b5a3-f393-e0a9-e50e24dcca9e'; // Для движения
+        const SERVO_BASE_UUID = '6e40000'; // Базовый для серво: 6e400003, 004, 005, 006 для left/right
 
-     // При отключении устройства возвращаем интерфейс в исходное состояние
-     device.addEventListener('gattserverdisconnected', () => {
-      statusEl.textContent = 'Устройство отключено.';
-      dataOutput.style.display = 'none';
-      dataLabel.style.display = 'none';
-      connectBtn.style.display = 'inline-block';
-      connectMessage.style.display = 'block'; // Показываем сообщение
-      sensorValueEl.textContent = '--';
-      dataOutput.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'; // Сбрасываем цвет
-      stressLevelEl.textContent = ''; // Убираем текст об уровне напряжения
-     });
+        const status = document.getElementById('status');
+        const connectBtn = document.getElementById('connect');
+        const joystick = document.getElementById('joystick');
+        const knob = document.getElementById('knob');
 
-    } catch (error) {
-     statusEl.textContent = 'Ошибка или отмена подключения: ' + error;
-     console.error(error);
-    }
-   });
-  })();
- </script>
+        // Подключение BLE
+        connectBtn.onclick = async () => {
+            try {
+                device = await navigator.bluetooth.requestDevice({ filters: [{ services: [SERVICE_UUID] }] });
+                server = await device.gatt.connect();
+                const service = await server.getPrimaryService(SERVICE_UUID);
+                driveChar = await service.getCharacteristic(DRIVE_UUID);
+                
+                // Серво характеристики (left/right для 4 серво)
+                for (let i = 1; i <= 4; i++) {
+                    const leftUuid = `${SERVO_BASE_UUID}${i*2-1}_b5a3-f393-e0a9-e50e24dcca9e`;
+                    const rightUuid = `${SERVO_BASE_UUID}${i*2}_b5a3-f393-e0a9-e50e24dcca9e`;
+                    servoChars.push(await service.getCharacteristic(leftUuid));
+                    servoChars.push(await service.getCharacteristic(rightUuid));
+                }
+                
+                status.textContent = '✅ Подключено!';
+                connectBtn.textContent = '🔌 Отключить';
+                connectBtn.onclick = () => device.gatt.disconnect();
+            } catch (err) {
+                status.textContent = '❌ Ошибка: ' + err;
+            }
+        };
+
+        // Джойстик
+        let joystickActive = false;
+        joystick.onpointerdown = (e) => {
+            joystickActive = true;
+            updateJoystick(e);
+        };
+        joystick.onpointermove = (e) => {
+            if (joystickActive) updateJoystick(e);
+        };
+        joystick.onpointerup = () => {
+            joystickActive = false;
+            resetJoystick();
+            sendCommand('S'); // Стоп
+        };
+
+        function updateJoystick(e) {
+            const rect = joystick.getBoundingClientRect();
+            let x = e.clientX - rect.left - rect.width / 2;
+            let y = e.clientY - rect.top - rect.height / 2;
+            const max = 70;
+            const dist = Math.min(Math.sqrt(x*x + y*y), max);
+            x = (x / dist) * (dist / max) * 100;
+            y = (y / dist) * (dist / max) * 100;
+            knob.style.left = `calc(50% + ${x}px)`;
+            knob.style.top = `calc(50% + ${y}px)`;
+            
+            if (Math.abs(x) > 20 || Math.abs(y) > 20) {
+                sendCommand(`J${Math.round(x)},${Math.round(y)}`);
+            }
+        }
+
+        function resetJoystick() {
+            knob.style.left = '50%';
+            knob.style.top = '50%';
+        }
+
+        // Кнопки движения
+        document.getElementById('forward').onclick = () => sendCommand('F');
+        document.getElementById('backward').onclick = () => sendCommand('B');
+        document.getElementById('left').onclick = () => sendCommand('L');
+        document.getElementById('right').onclick = () => sendCommand('R');
+        document.getElementById('stop').onclick = () => sendCommand('S');
+
+        // Серво кнопки (индексы 0-7)
+        ['servo1-left', 'servo1-right', 'servo2-left', 'servo2-right', 'servo3-left', 'servo3-right', 'servo4-left', 'servo4-right'].forEach((id, i) => {
+            document.getElementById(id).onclick = () => {
+                servoChars[i].writeValue(new TextEncoder().encode(`1`)); // Отправить '1' на серво
+            };
+        });
+
+        function sendCommand(cmd) {
+            if (driveChar) {
+                driveChar.writeValue(new TextEncoder().encode(cmd));
+            }
+        }
+    </script>
 </body>
 </html>
